@@ -52,13 +52,15 @@ These functions will match the following LKM Utilities, while they are plugged i
 
 The following list of LKM commands (utilities) and their usage, Hope this is useful for someone.
 
-- **insmod:** Insert a LKM into the kernel.
-- **rmmod:** Remove a LKM from the kernel.
-- **depmod:** Lists dependencies between LKMs.
-- **ksyms:** Lists symbols that are exported by the kernel for use by given LKMs.
-- **lsmod:** Lists currently loaded LKMs.
-- **modinfo:** Display contents of .modinfo section in an LKM object file.
-- **modprobe:** Loads given module after loading/unloads modules required for the given module. For example, if you must load A before loading B, 'modprobe' will automatically load A when you tell it to load B.
+| Tool | usage |
+|------|-------|
+| **insmod** | Insert a LKM into the kernel |
+| **rmmod** | Remove a LKM from the kernel |
+| **depmod** | Lists dependencies between LKMs.
+| **ksyms** | Lists symbols that are exported by the kernel for use by given LKMs.
+| **lsmod** | Lists currently loaded LKMs.
+| **modinfo** | Display contents of .modinfo section in an LKM object file.
+| **modprobe** | Loads given module after loading/unloads modules required for the given module. For example, if you must load A before loading B, 'modprobe' will automatically load A when you tell it to load B.|
 
 
 -------------------------------------
@@ -79,7 +81,7 @@ We have more than 70% of Linux kernel code specific to device drivers for thousa
 
 
 ## More details:
-http://en.wikipedia.org/wiki/Loadable_kernel_module
-http://www.tldp.org/HOWTO/Module-HOWTO/x73.html
-http://www.freesoftwaremagazine.com/articles/drivers_linux
-http://oreilly.com/openbook/linuxdrive3/book/
+- http://en.wikipedia.org/wiki/Loadable_kernel_module
+- http://www.tldp.org/HOWTO/Module-HOWTO/x73.html
+- http://www.freesoftwaremagazine.com/articles/drivers_linux
+- http://oreilly.com/openbook/linuxdrive3/book/
