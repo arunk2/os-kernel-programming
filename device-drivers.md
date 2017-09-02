@@ -86,12 +86,43 @@ We can have other function implementations as well. The entire list of the file_
 
 
 
+-----------------------
 
 
+## Device driver - Compile, Load/Unload, Test
+
+### Compiling driver:
+As discussed earlier a Linux loadable kernel module (LKM) is different from other binary executables. Hence it cannot be compiled the way we compile normal C files. Compiling a Linux module is a separate process. We use the help of kernel Makefile for compilation. The makefile we will have contents as given below. When you issue make command, it will generate 'mychardev.ko' module in the working directory.
+
+### MakeFile:
+    obj-m   := mychardev.o
+
+    all:
+        make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
+
+    clean:
+        make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean
 
 
+### Load/Unload driver:
+The following set of commands will load the driver modules and mount them as a device (character device with major# - 251 and minor# - 0)
+
+### load script:
+    sudo insmod mychardev.ko
+    sudo mknod /dev/mychardev c 251 0
+    sudo chmod 777 /dev/mychardev
+
+### unload script:
+    sudo rmmod mychardev
+    sudo rm /dev/mychardev
+
+
+### Testing driver:
+After compiling and loading the driver, Write a simple c program to open file '/dev/mychardev' in read mode and read content print it. It should give driver implemented functionality.
 
 
 ## Useful resource:
 - http://lwn.net/Kernel/LDD3/
 - http://lwn.net/images/pdf/LDD3/ch03.pdf
+- http://www.freesoftwaremagazine.com/articles/drivers_linux
+- http://oreilly.com/openbook/linuxdrive3/book/
