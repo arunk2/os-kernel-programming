@@ -48,20 +48,27 @@ It is logical to have -
 Earlier we discussed about what a File system was and why we need different type of file systems. 
 Let us discuss various key components of FS and implementation of them. 
 
-As discussed earlier FS gives abstraction to other programs to store and retrieve data on a storage device (through APIs or FS System calls).
+As discussed earlier FS gives abstraction to other programs to store and retrieve data on a storage device (through APIs or FS System calls). Let us see how the call from user API goes and fetches data from storage system.
 
-Typically any user application uses FS through APIs (like fopen, fread, fwrite). 
-These are not actual system calls, but are simple library calls (available as part of libc.so for every user programs). 
-These lib functions save the current context (stack, execution register details - through assembly instructions) and pack the arguments along with corresponding system call no. After they raise a trap (software interrupt) by calling trap 
-instruction (direct assembly instruction). Now, Interrupt handler observes a system call request and switches to kernel mode and calls the appropriate system call with packed arguments.
+### User Space:
+1. User application uses FS through APIs (like fopen, fread, fwrite). 
+2. These are not actual system calls, but are simple library calls (available as part of **libc.so** for every user programs). 
+3. These lib functions save the current context (stack, execution register details - through assembly instructions) 
+4. Pack the arguments along with corresponding system call no
+5. After they raise a trap (software interrupt) by calling trap instruction (direct assembly instruction). 
 
-The system call implementation will check for legality of the arguments (typically validity of the buffer being passed for read/write operations is checked) and makes call to the VFS system through (vop_open, vop_read, vop_write).
+### Kernel Space:
+6. Interrupt handler observes a system call request and switches to kernel mode
+7. calls the appropriate system call with packed arguments
+8. System call implementation will check for legality of the arguments (typically validity of the buffer being passed for read/write operations is checked)
+9. Makes call to the VFS system through (vop_open, vop_read, vop_write)
+10. VFS simply calls the corresponding FS's **ufs_open, ufs_read, ufs_write** calls. 
+11. These methods actually implement the underlying FS for mapping in and out of device through device drivers of the system.
+12. This layer keeps the implementation of mapping a file name (like '/usr/test/file1.txt') into some index number (called as inode number) 
+13. All the related blocks, where data for the given file is stored. 
+14. Once the blocks are identified (which are nothing but LBA - Logical Block Address), they call device drivers with corresponding operation open/read/write for given LBA.
+15. The device drivers actually checks for buffer validity and initiates the corresponding operation on the given LBA and suspends. 
+16. Device controller, part of every device maps the LBA to the actual location of device and does the requested operation and uses the DMI controller to move the requested data in/out of device and memory location.
+17. Once the operation is completed - buffer is loaded by the DMI mechanism and it awakes the suspended thread and returns 'return code' back to the user application after handling and raising respective error messages at each level.
 
-The VFS simply calls the corresponding FS's ufs_open, ufs_read, ufs_write calls. These methods actually implement the underlying FS for mapping in and out of device through device drivers of the system. 
-This layer keeps the implementation of mapping a file name (like '/usr/test/file1.txt') into some index number (called as inode number) and all the related blocks where data for the given file is stored. Once the blocks are identified (which are nothing but LBA - Logical Block Address), they call device drivers with corresponding operation open/read/write for given LBA.
-
-The device drivers actually checks for buffer validity and initiates the corresponding operation on the given LBA and suspends. Device controller, part of every device maps the LBA to the actual location of device and does the requested operation and uses the DMI controller to move the requested data in/out of device and memory location.
-
-Once the operation is completed - buffer is loaded by the DMI mechanism and it awakes the suspended thread and returns 'return code' back to the user application after handling and raising respective error messages at each level.
-
-Real FS are normally implemented with Virtual memory subsystem, which adds additional layer in the translation process and gives flexibility of memory mapping, shared memory, security and uniform address space for every process.
+Real FS are normally implemented with Virtual memory subsystem, which adds additional layer in the translation process and gives flexibility of **memory mapping, shared memory, security and uniform address space** for every process.
