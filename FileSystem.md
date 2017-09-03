@@ -72,3 +72,50 @@ As discussed earlier FS gives abstraction to other programs to store and retriev
 17. Once the operation is completed - buffer is loaded by the DMI mechanism and it awakes the suspended thread and returns 'return code' back to the user application after handling and raising respective error messages at each level.
 
 Real FS are normally implemented with Virtual memory subsystem, which adds additional layer in the translation process and gives flexibility of **memory mapping, shared memory, security and uniform address space** for every process.
+
+----------------------------------
+
+## System Calls related to File System
+Typically it is the responsibility of OS Kernel to have system call implementation. 
+Whenever a library(API) system call is called form user program - a soft interrupt (trap) is raised with system call no recorded. 
+System the switches to kernel mode to serve the interrupt.
+
+All the kernels will have implementation for every system call (currently **Linux Kernel 3.12 has around 350+ system call** implementation). In this post we focus on system calls which are absolutely essential for File System operations. Although the implementation details vary from FS to FS, every thing havs the following abstract operations implemented.
+
+- open - for opening a file
+- close - for closing a file
+- creat - for creating a new file
+- read - for reading give size of data from a opened file into given buffer
+- write - for writing give size of data from given buffer to a opened file
+- lseek - to move the file pointer to a particular position in given file
+
+
+---------------------------------------------------
+
+## File System - Important Data Structure
+As discussed in earlier posts we know that File System is an organized way to access huge information/data stored in permanent storage devices. To retrieve meaning of the raw data from the storage device, we need a FS. Let us discuss some of the important data structures typically used in UNIX based file system. 
+
+### i-node (index node):
+- The core structure storing all the metadata about the file and details of where actual data can be found
+- There are 2 types of i-node: Disk inode and Incore inode
+
+### Disk inode:
+Their size is always chosen to be exactly same size of the OS Block size. This will ensure a smooth transfer (load/update) of i-nodes from secondary storage.
+
+It typically holds:
+- Metadata of file:
+  - owner details
+  - file type (directory or normal)
+  - access permissions
+  - access times (created, last accessed, last modified)
+  - links count for the file
+  - file size
+  - List of pointer (disk addresses stored as LBAs) to the the data blocks 
+
+## Incore inode: (residing in memory):
+It holds every information of the disk i-node along with some additional information like
+
+- status of the in-core inode
+- inode number
+- reference count
+- pointers to other in-core inodes (used mainly for easy navigation during allocation of inodes)
