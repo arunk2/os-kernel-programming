@@ -45,3 +45,63 @@ They are used to copy an aritrary amount of data to and from userspace. Very sim
 
     copy_to_user( to, from, n );
     copy_from_user( to, from, n );
+
+-------------------------------------------------------
+
+## Adding a new system call to Linux Kernel
+Let us try to create a toy system call to do add operation, which takes 2 arguments and return their added value.
+
+Following are the steps in adding a new system call to Linux Kernel:
+
+1. Unzip and untar the latest Linux kernel source (https://www.kernel.org - currently 3.14 is the stable version) into /usr/src/ directory.
+2. Under /usr/src/Linux-x.x.x/kernel/ directory, Create a new file 'add_syscall.c' to define your system call with the following content.
+
+        #include <Linux/linkage.h>
+
+        asmlinkage int sys_add_syscall (int arg1, int arg2) { 
+         return(arg1 + arg2);
+        }
+
+3. In /usr/src/Linux-x.x.x/include/asm/unistd.h, define an index for the new system call. The index should be the number after the last system call defined in the list. Create new entry as below
+
+        #define __NR_sys_add_syscall 351
+
+4. Increment the system call count (since you have added a new system call). 
+
+        #define __NR_syscalls 352
+
+5. In /usr/src/Linux-x.x.x/arch/i386/kernel/entry.S, define a pointer to hold a reference to the new system call routine. (location/position should be same as the system call index defined in unistd.h).
+    
+        .long sys_myservice
+
+6. Add the system call to Makefile in /usr/src/Linux-x.x.x/kernel/Makefile. Add object after the other kernel objects have been declared.
+
+        obj-y += add_syscall.o
+
+7. Build the kernel with this change from /usr/src/Linux-x.x.x using the following commands
+
+        make xconfig
+        make dep //make dependency list
+        make bzImage //build kernel image
+    
+8. Boot the new kernel image by modifying the lilo loader (by editing /etc/lilo.conf)
+
+## Testing the toy 'add_syscall'
+
+1. Create a test.c file in home directory with the following content.
+
+        #include <Linux/errno.h>
+        #include<sys/syscall.h>
+        #include <Linux/unistd.h>
+
+        _syscall2(int, add_syscall, int, arg1, int, arg2);
+
+        main() {
+         printf ("Res = %d\n", add_syscall(1, 2));
+        }
+
+2. Compile and run the binary.
+
+        Output: 3
+
+If you get '3' as output, everything worked as expected and you have successfully created and added a system call to Linux kernel.
