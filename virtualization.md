@@ -34,6 +34,22 @@ Hardware virtualization can be:
 * **Para virtualization:** Here nothing is simulated. Guest programs need to be specifically modified to run in this environment. We can also call this as hardware-assisted virtualization. 
 This technology is mainly introduced for efficiency of hardware virtualization. **Example:** Intel VT and AMD-V technologies
 
+---------------------------------
+
+Security Threats - Virtualization technology
+============================================
+
+In virtualization technology, we need a core component `hypervisor' for virtualization of various environment (guest OS) on host. Hypervisor or virtual machine monitor (VMM) is a software / fi rmware / hardware that creates and runs virtual machines. A computer on which a hypervisor is running one or more virtual machines is defined as a host machine and each virtual machine is called a guest machine. The hypervisor presents the guest operating systems with a virtual operating platform and manages the execution of the guest operating systems. Most of the hackers try to exploit the security hole in hypervisor. 
+
+### Following are the popular security threats:
+**Hyperjacking** - This involves subverting the existing hypervisor or inserting a rogue hypervisor. Since hypervisors run at the most privileged ring level on a processor, this would be hard or even impossible for any operating system running on the hypervisor to detect.
+
+**VM Escape** - Virtual machine escape is an exploit in which the attacker runs code on a VM that allows an operating system running within it to break out and interact directly with the hypervisor. Such an exploit could give the attacker access to the host operating system and all other virtual machines (VMs) running on that host.
+
+**VM Hopping** - Similar to VM Escape, VM Hopping allows an attacker to move from one virtual server to compromise other virtual servers on the same physical hardware.
+
+**VM Theft** - This is the ability to steal a virtual machine le electronically, which can then be mounted and run elsewhere.
 
 ## For more details: ##
-http://en.wikipedia.org/wiki/Virtualization
+- http://en.wikipedia.org/wiki/Virtualization
+- http://www.esecurityplanet.com/network-security/virtualization-poses-security-risks-in-public-cloud.html
