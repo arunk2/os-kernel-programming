@@ -50,6 +50,29 @@ In virtualization technology, we need a core component `hypervisor' for virtuali
 
 **VM Theft** - This is the ability to steal a virtual machine le electronically, which can then be mounted and run elsewhere.
 
+-------------------------------------------
+
+Complexity of Hypervisors
+=========================
+In virtualization technology, we need a core component **'hypervisor'** for virtualization of various environment (guest OS) on host. 
+
+Hypervisor or virtual machine monitor (VMM) is a software / rmware / hardware that creates and runs virtual machines. A computer on which a hypervisor is running one or more virtual machines is called as a host machine and each virtual machine is called a guest machine. 
+The hypervisor presents the guest operating systems with a virtual operating platform and manages the execution of the guest operating systems. These hypervisors are complex units, which needs lot of support from current technology.
+
+### For Xen Hypervisor and KVM Hypervisor - minimum System Requirements:
+- Hardware virtualization support required (Intel-VT or AMD-V enabled)
+- 64-bit x86 CPU
+- 2 GB of memory
+- 6 GB of local disk
+- At least 1 NIC
+
+### For VMware's Hypervisor (ESXi/ESX) - minimum System Requirements:
+- Hardware virtualization support required (Intel-VT or AMD-V enabled)
+- CPU: single socket, dual core
+- Memory: 4GB
+- Network: one network adapter, plus one for management interface
+- Storage (SATA/SAS): one 80GB drive
+
 ## For more details: ##
 - http://en.wikipedia.org/wiki/Virtualization
 - http://www.esecurityplanet.com/network-security/virtualization-poses-security-risks-in-public-cloud.html
