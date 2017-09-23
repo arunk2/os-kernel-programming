@@ -35,3 +35,5 @@ Whenever a text search is made,
 
 
   Note: TOFS can be mainly for string text files/flat files. Performance on other file types may be really bad or sometimes the system may crash. We need to implement error checks to ensure only text files are being stored.
+
+![TOFS](/images/tofs.png)
